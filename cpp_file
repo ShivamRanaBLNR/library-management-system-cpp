@@ -1,0 +1,174 @@
+#include <iostream>
+using namespace std;
+
+class Book {
+public:
+    int id;
+    string name;
+    bool isIssued;
+
+    void add(int i, string n) {
+        id = i;
+        name = n;
+        isIssued = false;
+    }
+
+    void display() {
+        cout << "ID: " << id << " | Name: " << name;
+        if (isIssued)
+            cout << " | Status: Issued";
+        else
+            cout << " | Status: Available";
+        cout << endl;
+    }
+};
+
+Book books[100];
+int totalBooks = 0;
+
+// Checking for  duplicate ID
+bool isDuplicate(int id) {
+    for (int i = 0; i < totalBooks; i++) {
+        if (books[i].id == id)
+            return true;
+    }
+    return false;
+}
+
+// Adding a Book
+void addBook() {
+    int id;
+    string name;
+
+    cout << "Enter Book ID: ";
+    cin >> id;
+
+    if (isDuplicate(id)) {
+        cout << "Book ID already exists!\n";
+        return;
+    }
+
+    cout << "Enter Book Name: ";
+    cin.ignore();
+    getline(cin, name);
+
+    books[totalBooks].add(id, name);
+    totalBooks++;
+
+    cout << "Book added successfully.\n";
+}
+
+// To View All Books
+void viewBooks() {
+    if (totalBooks == 0) {
+        cout << "No books available.\n";
+        return;
+    }
+
+    for (int i = 0; i < totalBooks; i++) {
+        books[i].display();
+    }
+}
+
+// Issue Book
+void issueBook() {
+    int id;
+    cout << "Enter Book ID to issue: ";
+    cin >> id;
+
+    for (int i = 0; i < totalBooks; i++) {
+        if (books[i].id == id && !books[i].isIssued) {
+            books[i].isIssued = true;
+            cout << "Book issued successfully.\n";
+            return;
+        }
+    }
+
+    cout << "Book not available.\n";
+}
+
+// Return Book
+void returnBook() {
+    int id;
+    cout << "Enter Book ID to return: ";
+    cin >> id;
+
+    for (int i = 0; i < totalBooks; i++) {
+        if (books[i].id == id && books[i].isIssued) {
+            books[i].isIssued = false;
+            cout << "Book returned successfully.\n";
+            return;
+        }
+    }
+
+    cout << "Invalid ID or book not issued.\n";
+}
+
+// Search Book
+void searchBook() {
+    int id;
+    cout << "Enter Book ID to search: ";
+    cin >> id;
+
+    for (int i = 0; i < totalBooks; i++) {
+        if (books[i].id == id) {
+            books[i].display();
+            return;
+        }
+    }
+
+    cout << "Book not found.\n";
+}
+
+// Count Available Books
+void countAvailable() {
+    int count = 0;
+    for (int i = 0; i < totalBooks; i++) {
+        if (!books[i].isIssued)
+            count++;
+    }
+    cout << "Available books: " << count << endl;
+}
+
+// Show Issued Books
+void showIssued() {
+    bool found = false;
+    for (int i = 0; i < totalBooks; i++) {
+        if (books[i].isIssued) {
+            books[i].display();
+            found = true;
+        }
+    }
+    if (!found)
+        cout << "No books are issued.\n";
+}
+
+int main() {
+    int choice;
+
+    while (true) {
+        cout << "\n===== Library Management System =====\n";
+        cout << "1. Add Book\n";
+        cout << "2. View All Books\n";
+        cout << "3. Issue Book\n";
+        cout << "4. Return Book\n";
+        cout << "5. Search Book\n";
+        cout << "6. Count Available Books\n";
+        cout << "7. Show Issued Books\n";
+        cout << "8. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: addBook(); break;
+            case 2: viewBooks(); break;
+            case 3: issueBook(); break;
+            case 4: returnBook(); break;
+            case 5: searchBook(); break;
+            case 6: countAvailable(); break;
+            case 7: showIssued(); break;
+            case 8: return 0;
+            default: cout << "Invalid choice!\n";
+        }
+    }
+}
